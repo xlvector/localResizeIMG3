@@ -86,7 +86,7 @@
                     results.base64 = encoder.encode(ctx.getImageData(0, 0, canvas.width, canvas.height), that.defaults.quality * 100);
 
                     // 执行回调
-                    callback(results);
+                    _callback(results);
                 }
                 // 其他情况&IOS
                 else {
