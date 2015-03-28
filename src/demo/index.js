@@ -9,14 +9,15 @@
 
 
 
+
             // 以下为演示用内容
             var tip = document.querySelector('#tip'),
                 report = document.querySelector('#report'),
                 footer = document.querySelector('footer');
 
             report.innerHTML = footer.innerHTML =  '';
-            tip.innerHTML = '<p>正在生成和上传..</p> <small class="text-muted">演示使用了大量内存，可能会造成几秒内卡顿，不代表真实表现，请亲测。</small>';
-            demo_report('原始图片', results.blob, results.origin.size);
+            tip.innerHTML = '<p>正在生成和上传..</p> <small class="text-muted">演示未优化移动端内存占用，可能会造成几秒内卡顿或闪退，不代表真实表现，请亲测。</small>';
+            demo_report('原始图片', results.origin, results.origin.size);
 
             setTimeout(function () {
                 demo_report('客户端预压的图片', results.base64, results.base64.length * 0.8);
@@ -70,7 +71,7 @@
             document.querySelector('#report').appendChild(li);
         };
 
-        img.src = src;
+        img.src = typeof src === 'string' ? src : URL.createObjectURL(src);
     }
 
     // 演示用服务器太慢，做个延缓加载
