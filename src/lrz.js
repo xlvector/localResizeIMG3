@@ -131,9 +131,7 @@
                  */
                 function _callback (results) {
                     // 释放内存
-                    canvas.remove();
                     canvas = null;
-                    img.remove();
                     img = null;
                     URL.revokeObjectURL(blob);
 
