@@ -86,9 +86,9 @@
                     ctx.drawImage(img, 0, 0, resize.w, resize.h);
 
                     // 低于4.2版才使用算法压缩
-                    if ((+userAgent.substr(userAgent.indexOf('Android') + 8, 3)) <= 4.2) {
+                    if ((+userAgent.substr(userAgent.indexOf('Android') + 8, 3)) < 4.2) {
                         var encoder = new JPEGEncoder();
-                        results.base64 = encoder.encode(ctx.getImageData(0, 0, canvas.width, canvas.height), that.defaults.quality * 100);
+                        results.base64 = encoder.encode(ctx.getImageData(0, 0, canvas.width, canvas.height), that.defaults.quality * 10);
                     } else {
                         results.base64 = canvas.toDataURL('image/jpeg', that.defaults.quality);
                     }
