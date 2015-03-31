@@ -19,7 +19,7 @@
         this.file = file;
         this.callback = callback;
         this.defaults = {
-            quality: 7
+            quality: 0.7
         };
 
         // 适应传入的参数
@@ -27,7 +27,7 @@
             for (var p in options) {
                 this.defaults[p] = options[p];
             }
-            if (this.defaults.quality > 10) this.defaults.quality = 10;
+            if (this.defaults.quality > 1) this.defaults.quality = 1;
         } else {
             this.callback = options;
         }
@@ -88,7 +88,7 @@
                     // 低于4.2版才使用算法压缩
                     if ((+userAgent.substr(userAgent.indexOf('Android') + 8, 3)) < 4.2) {
                         var encoder = new JPEGEncoder();
-                        results.base64 = encoder.encode(ctx.getImageData(0, 0, canvas.width, canvas.height), that.defaults.quality * 10);
+                        results.base64 = encoder.encode(ctx.getImageData(0, 0, canvas.width, canvas.height), that.defaults.quality * 100);
                     } else {
                         results.base64 = canvas.toDataURL('image/jpeg', that.defaults.quality);
                     }
@@ -125,7 +125,7 @@
                             default:
                                 ctx.drawImage(img, 0, 0, resize.w, resize.h);
                         }
-
+                        
                         results.base64 = canvas.toDataURL('image/jpeg', that.defaults.quality);
 
                         // 执行回调
