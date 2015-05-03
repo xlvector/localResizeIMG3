@@ -41,10 +41,10 @@
         this.init();
     }
 
+    Lrz.version = '3.1.0';
+
     Lrz.prototype = {
         constructor: Lrz,
-
-        version: '3.1.0',
 
         /**
          * 初始化
