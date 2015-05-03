@@ -17,6 +17,7 @@
 var input = document.querySelector('input');
 
 input.onchange = function () {
+    // 也可以传入图片路径：lrz('../demo.jpg', ...
 	lrz(this.files[0], function (results) {
 	  // 你需要的数据都在这里，可以以字符串的形式传送base64给服务端转存为图片。
       console.log(results); 
