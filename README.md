@@ -45,7 +45,7 @@ input.onchange = function () {
 * Q：有时拍摄完照片后，页面自动刷新或闪退了。
 * A：内存爆掉了，常见于低配android手机，可以每次上传完毕后设置 `results.base64 = null;` 来释放内存，改善情况。
 * Q: 直接传入图片路径的无法生成图片
-* A: 可能有跨域的问题，具体请看(CORS_enabled_image)[https://developer.mozilla.org/en-US/docs/Web/HTML/CORS_enabled_image]
+* A: 可能有跨域的问题，具体请看[CORS_enabled_image](https://developer.mozilla.org/en-US/docs/Web/HTML/CORS_enabled_image)
 
 ---
 > ##### 时间： 2015年02月
