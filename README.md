@@ -29,7 +29,7 @@ input.onchange = function () {
 ## 兼容性
 * IE9 及 以上
 * chrome 什么的都支持。
-* 移动设备几乎都支持（IOS6除外），若有问题，请先在 [在线演示](http://lrz3.herokuapp.com/) 测试一下（移动设备请扫描二维码）。
+* 移动设备几乎都支持（IOS低于IOS7.1.2除外），若有问题，请先在 [在线演示](http://lrz3.herokuapp.com/) 测试一下（移动设备请扫描二维码）。
 
 ![移动设备请扫描](http://think2011.qiniudn.com/lrz3-qrcode.png)
 
@@ -41,6 +41,9 @@ input.onchange = function () {
 
 * Q：有时拍摄完照片后，页面自动刷新或闪退了。
 * A：内存爆掉了，常见于低配android手机，可以每次上传完毕后设置 `results.base64 = null;` 来释放内存，改善情况。
+
+* Q: 直接传入图片路径的无法生成图片
+* A: 可能有跨域的问题，具体请看(CORS_enabled_image)[https://developer.mozilla.org/en-US/docs/Web/HTML/CORS_enabled_image]
 
 ---
 > ##### 时间： 2015年02月

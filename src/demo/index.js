@@ -2,6 +2,7 @@
     var input = document.querySelector('input');
 
     input.onchange = function () {
+        // 也可以传入图片路径：lrz('../demo.jpg', ...
         lrz(this.files[0], {width: 400}, function (results) {
             // 你需要的数据都在这里，可以以字符串的形式传送base64给服务端转存为图片。
             console.log(results);
@@ -58,6 +59,8 @@
         var img = new Image(),
             li = document.createElement('li'),
             size = (size / 1024).toFixed(2) + 'KB';
+
+        if(size === 'NaNKB') size = '';
 
         img.onload = function () {
             var content = '<ul>' +
