@@ -41,8 +41,6 @@
         this.init();
     }
 
-    Lrz.version = '3.1.0';
-
     Lrz.prototype = {
         constructor: Lrz,
 
@@ -89,8 +87,8 @@
                 if (ua.os.family === 'Android') {
                     ctx.drawImage(img, 0, 0, resize.w, resize.h);
 
-                    // 低于4.3版才使用算法压缩
-                    if (+ua.os.version < 4.3) {
+                    // 低于4.5版才使用算法压缩
+                    if (+ua.os.version < 4.5) {
                         var encoder    = new JPEGEncoder();
                         results.base64 = encoder.encode(ctx.getImageData(0, 0, canvas.width, canvas.height), that.defaults.quality * 100);
                     } else {
@@ -101,17 +99,18 @@
                     _callback(results);
                 }
 
-                // 兼容IOS8以下
+                // 兼容IOS7-IOS6
                 else if (ua.os.family === 'iOS' && +ua.os.version < 8) {
-                    var mpImg = new MegaPixImage(img);
                     EXIF.getData(img, function () {
-                        mpImg.render(canvas, {
-                            width : canvas.width,
-                            height: canvas.height
-                        });
-                    });
+                        var orientation = EXIF.getTag(this, "Orientation"),
+                            mpImg       = new MegaPixImage(img);
 
-                    orientation(function () {
+                        mpImg.render(canvas, {
+                            width      : canvas.width,
+                            height     : canvas.height,
+                            orientation: orientation
+                        });
+
                         results.base64 = canvas.toDataURL('image/jpeg', that.defaults.quality);
 
                         // 执行回调
@@ -121,19 +120,6 @@
 
                 // 其他设备&IOS8+
                 else {
-                    orientation(function () {
-                        results.base64 = canvas.toDataURL('image/jpeg', that.defaults.quality);
-
-                        // 执行回调
-                        _callback(results);
-                    });
-                }
-
-                /**
-                 * 调整图片方向
-                 * @param cb
-                 */
-                function orientation(cb) {
                     EXIF.getData(img, function () {
                         var orientation = EXIF.getTag(this, "Orientation");
 
@@ -161,7 +147,10 @@
                                 ctx.drawImage(img, 0, 0, resize.w, resize.h);
                         }
 
-                        cb();
+                        results.base64 = canvas.toDataURL('image/jpeg', that.defaults.quality);
+
+                        // 执行回调
+                        _callback(results);
                     });
                 }
 
@@ -180,7 +169,8 @@
                     callback(results);
                 }
             };
-            img.src         = blob;
+
+            img.src = blob;
         },
 
         /**
