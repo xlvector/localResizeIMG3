@@ -5,8 +5,8 @@
  */
 ;
 (function () {
-    window.URL    = window.URL || window.webkitURL;
-    var userAgent = navigator.userAgent;
+    window.URL = window.URL || window.webkitURL;
+    var ua     = detect.parse(navigator.userAgent);
 
     /**
      * 客户端压缩图片
@@ -67,8 +67,7 @@
                 blob    = (typeof file === 'string') ? file : URL.createObjectURL(file);
 
             img.crossOrigin = "*";
-            img.onload = function () {
-
+            img.onload      = function () {
                 // 获得图片缩放尺寸
                 var resize = that.resize(this);
 
@@ -87,11 +86,11 @@
                 results.origin = file;
 
                 // 兼容 Android
-                if (/Android/i.test(userAgent)) {
+                if (ua.os.family === 'Android') {
                     ctx.drawImage(img, 0, 0, resize.w, resize.h);
 
-                    // 低于4.2版才使用算法压缩
-                    if ((+userAgent.substr(userAgent.indexOf('Android') + 8, 3)) < 4.2) {
+                    // 低于4.3版才使用算法压缩
+                    if (+ua.os.version < 4.3) {
                         var encoder    = new JPEGEncoder();
                         results.base64 = encoder.encode(ctx.getImageData(0, 0, canvas.width, canvas.height), that.defaults.quality * 100);
                     } else {
@@ -101,9 +100,40 @@
                     // 执行回调
                     _callback(results);
                 }
-                // 其他情况&IOS
+
+                // 兼容IOS8以下
+                else if (ua.os.family === 'iOS' && +ua.os.version < 8) {
+                    var mpImg = new MegaPixImage(img);
+                    EXIF.getData(img, function () {
+                        mpImg.render(canvas, {
+                            width : canvas.width,
+                            height: canvas.height
+                        });
+                    });
+
+                    orientation(function () {
+                        results.base64 = canvas.toDataURL('image/jpeg', that.defaults.quality);
+
+                        // 执行回调
+                        _callback(results);
+                    });
+                }
+
+                // 其他设备&IOS8+
                 else {
-                    // 调整正确的拍摄方向
+                    orientation(function () {
+                        results.base64 = canvas.toDataURL('image/jpeg', that.defaults.quality);
+
+                        // 执行回调
+                        _callback(results);
+                    });
+                }
+
+                /**
+                 * 调整图片方向
+                 * @param cb
+                 */
+                function orientation(cb) {
                     EXIF.getData(img, function () {
                         var orientation = EXIF.getTag(this, "Orientation");
 
@@ -131,12 +161,8 @@
                                 ctx.drawImage(img, 0, 0, resize.w, resize.h);
                         }
 
-                        results.base64 = canvas.toDataURL('image/jpeg', that.defaults.quality);
-
-                        // 执行回调
-                        _callback(results);
+                        cb();
                     });
-
                 }
 
                 /**
@@ -154,7 +180,7 @@
                     callback(results);
                 }
             };
-            img.src = blob;
+            img.src         = blob;
         },
 
         /**
