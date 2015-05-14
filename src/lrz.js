@@ -198,6 +198,12 @@
                 ret.h = h;
             }
 
+            // 超过这个值base64无法生成，在IOS上
+            if(ret.w >= 3264 || ret.h >= 2448) {
+                ret.w *= 0.8;
+                ret.h *= 0.8;
+            }
+
             return ret;
         }
     };
