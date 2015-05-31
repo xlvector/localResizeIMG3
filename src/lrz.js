@@ -49,6 +49,24 @@
       init: function() {
         var that = this;
 
+        // 简单的兼容性检测
+        if(typeof window.URL === 'undefined' ||
+          typeof document.createElement('canvas').getContext !== 'function'){
+          var error = new Error('不支持此设备');
+
+          // 错误回调
+          if (typeof that.defaults.fail === 'function') {
+            that.defaults.fail(error);
+          }
+
+          // 压缩结束回调
+          if (typeof that.defaults.always === 'function') {
+            that.defaults.always();
+          }
+
+          return;
+        }
+
         that.create(that.file);
       },
 
