@@ -129,13 +129,12 @@
                       ctx.drawImage(img, 0, 0, resize.w, resize.h);
                   }
 
-                  if (ua.os.family === 'Android' && ua.os.version < 4.5) {
+                  if (ua.os.family === 'Android' && ua.os.version.slice(0, 3) < 4.5) {
                     var encoder = new JPEGEncoder();
                     results.base64 = encoder.encode(ctx.getImageData(0, 0, canvas.width, canvas.height), that.defaults.quality * 100);
                   } else {
                     results.base64 = canvas.toDataURL('image/jpeg', that.defaults.quality);
                   }
-                  results.base64 = canvas.toDataURL('image/jpeg', that.defaults.quality);
 
                   // 执行回调
                   _callback(results);
