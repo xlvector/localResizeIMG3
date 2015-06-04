@@ -3,7 +3,17 @@
 
     input.onchange = function () {
         // 也可以传入图片路径：lrz('../demo.jpg', ...
-        lrz(this.files[0], {width: 400}, function (results) {
+        lrz(this.files[0], {
+            before: function() {
+                console.log('压缩开始');
+            },
+            fail: function(err) {
+                console.error(err);
+            },
+            always: function() {
+                console.log('压缩结束');
+            },
+            done: function (results) {
             // 你需要的数据都在这里，可以以字符串的形式传送base64给服务端转存为图片。
             console.log(results);
 
@@ -46,6 +56,7 @@
 
                 xhr.send(JSON.stringify(data)); // 发送base64
             }, 100);
+            }
         });
     };
 

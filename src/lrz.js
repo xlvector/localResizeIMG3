@@ -12,25 +12,24 @@
      * 客户端压缩图片
      * @param file
      * @param [options]
-     * @param callback
      * @constructor
      */
-    function Lrz(file, options, callback) {
+    function Lrz(file, options) {
       this.file = file;
-      this.callback = callback;
       this.defaults = {
-        quality: 0.7
+        quality: 0.7,
+        // width: 1000,
+        // height: 1000,
+        done: null,
+        fail: null,
+        before: null,
+        always: null
       };
 
-      // 适应传入的参数
-      if (callback) {
-        for (var p in options) {
-          this.defaults[p] = options[p];
-        }
-        if (this.defaults.quality > 1) this.defaults.quality = 1;
-      } else {
-        this.callback = options;
+      for (var p in options) {
+        this.defaults[p] = options[p];
       }
+      if (this.defaults.quality > 1) this.defaults.quality = 1;
 
       this.results = {
         origin: null,
@@ -50,7 +49,25 @@
       init: function() {
         var that = this;
 
-        that.create(that.file, that.callback);
+        // 简单的兼容性检测
+        if(typeof window.URL === 'undefined' ||
+          typeof document.createElement('canvas').getContext !== 'function'){
+          var error = new Error('不支持此设备');
+
+          // 错误回调
+          if (typeof that.defaults.fail === 'function') {
+            that.defaults.fail(error);
+          }
+
+          // 压缩结束回调
+          if (typeof that.defaults.always === 'function') {
+            that.defaults.always();
+          }
+
+          return;
+        }
+
+        that.create(that.file);
       },
 
       /**
@@ -58,13 +75,25 @@
        * @param file
        * @param callback
        */
-      create: function(file, callback) {
+      create: function(file) {
         var that = this,
           img = new Image(),
           results = that.results,
           blob = (typeof file === 'string') ? file : URL.createObjectURL(file);
-        img.src = blob;
+
         img.crossOrigin = "*";
+        img.onerror = function() {
+          var error = new Error('图片加载失败');
+          // 读取文件失败
+          if (typeof that.defaults.fail === 'function') {
+            that.defaults.fail(error);
+          }
+
+          // 压缩结束回调
+          if (typeof that.defaults.always === 'function') {
+            that.defaults.always();
+          }
+        };
         img.onload = function() {
             // 获得图片缩放尺寸
             var resize = that.resize(this);
@@ -103,7 +132,7 @@
                   results.base64 = canvas.toDataURL('image/jpeg', that.defaults.quality);
 
                   // 执行回调
-                  _callback(results);
+                  _resultCallback(results);
 
                 }
                 // 其他设备&IOS8+
@@ -132,16 +161,15 @@
                       ctx.drawImage(img, 0, 0, resize.w, resize.h);
                   }
 
-                  if (ua.os.family === 'Android' && ua.os.version < 4.5) {
+                  if (ua.os.family === 'Android' && ua.os.version.slice(0, 3) < 4.5) {
                     var encoder = new JPEGEncoder();
                     results.base64 = encoder.encode(ctx.getImageData(0, 0, canvas.width, canvas.height), that.defaults.quality * 100);
                   } else {
                     results.base64 = canvas.toDataURL('image/jpeg', that.defaults.quality);
                   }
-                  results.base64 = canvas.toDataURL('image/jpeg', that.defaults.quality);
 
                   // 执行回调
-                  _callback(results);
+                  _resultCallback(results);
 
                 }
               });
@@ -150,7 +178,7 @@
               /**
                * 包装回调
                */
-              function _callback(results) {
+              function _resultCallback(results) {
                 // 释放内存
                 canvas = null;
                 img = null;
@@ -159,9 +187,21 @@
                 // 加入base64Len，方便后台校验是否传输完整
                 results.base64Len = results.base64.length;
 
-                callback(results);
+                // 压缩成功回调
+                if (typeof that.defaults.done === 'function') {
+                  that.defaults.done(results);
+                }
+
+                // 压缩结束回调
+                if (typeof that.defaults.always === 'function') {
+                  that.defaults.always();
+                }
               }
             };
+
+            // 压缩开始前回调
+            this.defaults.before();
+            img.src = blob;
           },
 
           /**
@@ -254,7 +294,7 @@
       };
 
       // 暴露接口
-      window.lrz = function(file, options, callback) {
-        return new Lrz(file, options, callback);
+      window.lrz = function(file, options) {
+        return new Lrz(file, options);
       };
     })();
