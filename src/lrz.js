@@ -104,6 +104,9 @@
                 var canvas = document.createElement('canvas'),
                   ctx;
 
+                // 根据旋转重置尺寸
+                that.rotateResize(resize, orientation);
+
                 canvas.width = resize.w;
                 canvas.height = resize.h;
                 ctx = canvas.getContext('2d');
@@ -233,7 +236,61 @@
             }
 
             return ret;
-          }
+        },
+
+        /**
+         * 根据旋转角度重置之前设定的宽高
+         * @param resize
+         * @param orientation
+         * @return
+         */
+        rotateResize: function (resize, orientation) {
+            switch (orientation) {
+                case 6:
+                case 8:
+                    if(this.defaults.width && this.defaults.height) {
+                        var oldW = resize.w, oldH = resize.h;
+
+                        resize.w = oldH;
+                        resize.h = oldW;
+                        return false;
+                    }
+
+                    var diffVal;
+
+                    if(this.defaults.width) {
+                        if(resize.w > resize.h) {
+                            diffVal = resize.w - resize.h;
+                            resize.w += diffVal;
+                            resize.h += diffVal;
+                        }
+                        else if (resize.w < resize.h) {
+                            diffVal = resize.h - resize.w;
+                            resize.w -= diffVal;
+                            resize.h -= diffVal;
+                        }
+                        return false;
+                    }
+
+                    if(this.defaults.height) {
+                        if(resize.w > resize.h) {
+                            diffVal = resize.w - resize.h;
+                            resize.w -= diffVal;
+                            resize.h -= diffVal;
+                        }
+                        else if (resize.w < resize.h) {
+                            diffVal = resize.h - resize.w;
+                            resize.w += diffVal;
+                            resize.h += diffVal;
+                        }
+                        return false;
+                    }
+                    break;
+
+                default:
+                    // do nothing
+            }
+        }
       };
 
       // 暴露接口
