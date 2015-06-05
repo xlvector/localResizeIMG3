@@ -200,7 +200,10 @@
             };
 
             // 压缩开始前回调
-            this.defaults.before();
+            if (typeof this.defaults.before === 'function') {
+              this.defaults.before();
+            }
+            
             img.src = blob;
           },
 
