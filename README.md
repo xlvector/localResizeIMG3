@@ -1,3 +1,6 @@
+## 请谨慎使用
+作者暂时没有精力维护此repo，若您依然想使用，请了解 issue 里已知的问题，或者阅读源代码（核心逻辑并不复杂）。
+
 ## 介绍一下
 * 基于原生js
 * 提供pc & mobile版本，修复之前各位提到的BUG和疑问。
@@ -62,6 +65,9 @@ input.onchange = function () {
 
 * Q: 直接传入图片路径的无法生成图片
 * A: 可能有跨域的问题，具体请看[CORS_enabled_image](https://developer.mozilla.org/en-US/docs/Web/HTML/CORS_enabled_image)
+
+* Q: 想要商用可以吗？
+* A: 没问题，但请留意issue里已知的问题。
 
 ---
 > ##### 时间： 2015年02月
