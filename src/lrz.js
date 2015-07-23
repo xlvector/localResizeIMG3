@@ -221,9 +221,18 @@
                 h: img.height
               };
 
-            if (w & h) {
-              ret.w = w;
-              ret.h = h;
+            if (w && h) {
+              if (scale >= w / h) {
+                if (ret.w > w) {
+                  ret.w = w;
+                  ret.h = Math.ceil(w / scale);
+                }
+              } else {
+                if (ret.h > h) {
+                  ret.h = h;
+                  ret.w = Math.ceil(h * scale);
+                }
+              }
             } else if (w) {
               ret.w = w;
               ret.h = Math.ceil(w / scale);
