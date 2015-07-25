@@ -224,7 +224,6 @@
            * @returns {{w: (Number), h: (Number)}}
            */
           resize: function(img, orientation) {
-            alert(orientation);
             var w = this.defaults.width,
               h = this.defaults.height,
               ret = {
