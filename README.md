@@ -11,7 +11,7 @@
 ## 演示
 ![](http://think2011.qiniudn.com/lrz3-demo.gif)
 
-[在线演示](http://lrz3.herokuapp.com/)
+[在线演示](http://dwandw-lrz3.herokuapp.com/)
 
 ## 基本例子
 请先根据情况引入 `lrz.mobile.min.js` 或 `lrz.pc.min.js`。
@@ -22,6 +22,8 @@ var input = document.querySelector('input');
 input.onchange = function () {
     // 也可以传入图片路径：lrz('../demo.jpg', ...
     lrz(this.files[0], {
+        width:1000,
+        height:1000,
         // 压缩开始
         before: function() {
             console.log('压缩开始');
@@ -37,7 +39,7 @@ input.onchange = function () {
         // 压缩成功
         done: function (results) {
               // 你需要的数据都在这里，可以以字符串的形式传送base64给服务端转存为图片。
-              console.log(results); 
+              console.log(results);
         }
     });
 }
@@ -71,7 +73,5 @@ input.onchange = function () {
 
 ---
 > ##### 时间： 2015年02月
-> ##### 演示： [在线演示](http://lrz3.herokuapp.com/)
-> ##### 下载： [点此进入](https://github.com/think2011/localResizeIMG3/releases)
-> ##### 博客： [think2011](http://think2011.github.io)
-
+> ##### 演示： [在线演示](http://dwandw-lrz3.herokuapp.com/)
+> ##### 下载： [点此进入](https://github.com/dwandw/localResizeIMG3/releases)
