@@ -4,6 +4,8 @@
     input.onchange = function () {
         // 也可以传入图片路径：lrz('../demo.jpg', ...
         lrz(this.files[0], {
+			width:1200,
+			height:900,
             before: function() {
                 console.log('压缩开始');
             },
@@ -40,21 +42,6 @@
                     size: results.base64.length // 校验用，防止未完整接收
                 };
 
-                xhr.open('POST', '/');
-                xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
-                xhr.onreadystatechange = function () {
-                    if (xhr.readyState === 4 && xhr.status === 200) {
-                        var result = JSON.parse(xhr.response);
-
-                        result.error
-                            ? alert('服务端错误，未能保存图片')
-                            : demo_report('服务端实存的图片', result.src, result.size);
-
-                        tip.innerHTML = '<p>生成和上传完毕</p> <small class="text-muted">演示使用了大量内存，可能会造成几秒内卡顿，不代表真实表现，请亲测。</small>';
-                    }
-                };
-
-                xhr.send(JSON.stringify(data)); // 发送base64
             }, 100);
             }
         });
