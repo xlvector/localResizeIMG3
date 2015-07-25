@@ -119,30 +119,19 @@
                 if (ua.os.family === 'iOS' && parseInt(ua.os.version) < 8) {
 
                   var mpImg = new MegaPixImage(img);
-                  switch (orientation) {
-                    case 6:
-                      mpImg.render(canvas, {
+                  if("5678".indexOf(orientation) > -1){
+                    mpImg.render(canvas, {
                         width: canvas.height,
                         height: canvas.width,
                         orientation: orientation
                       });
-                      break;
-
-                    case 8:
-                      mpImg.render(canvas, {
-                        width: canvas.height,
-                        height: canvas.width,
-                        orientation: orientation
-                      });
-                      break;
-
-                    default:
-                      mpImg.render(canvas, {
+                  }else{
+                    mpImg.render(canvas, {
                         width: canvas.width,
                         height: canvas.height,
                         orientation: orientation
                       });
-                    }
+                  }
 
                   results.base64 = canvas.toDataURL('image/jpeg', that.defaults.quality);
 
@@ -157,13 +146,35 @@
                       ctx.rotate(180 * Math.PI / 180);
                       ctx.drawImage(img, -resize.w, -resize.h, resize.w, resize.h);
                       break;
-
                     case 6:
                       ctx.rotate(90 * Math.PI / 180);
                       ctx.drawImage(img, 0, -resize.w, resize.h, resize.w);
                       break;
-
                     case 8:
+                      ctx.rotate(270 * Math.PI / 180);
+                      ctx.drawImage(img, -resize.h, 0, resize.h, resize.w);
+                      break;
+
+                    case 2:
+                      ctx.translate(resize.w, 0);
+                      ctx.scale(-1, 1);
+                      ctx.drawImage(img, 0, 0, resize.w, resize.h);
+                      break;
+                    case 4:
+                      ctx.translate(resize.w, 0);
+                      ctx.scale(-1, 1);
+                      ctx.rotate(180 * Math.PI / 180);
+                      ctx.drawImage(img, -resize.w, -resize.h, resize.w, resize.h);
+                      break;
+                    case 5:
+                      ctx.translate(resize.w, 0);
+                      ctx.scale(-1, 1);
+                      ctx.rotate(90 * Math.PI / 180);
+                      ctx.drawImage(img, 0, -resize.w, resize.h, resize.w);
+                      break;
+                    case 7:
+                      ctx.translate(resize.w, 0);
+                      ctx.scale(-1, 1);
                       ctx.rotate(270 * Math.PI / 180);
                       ctx.drawImage(img, -resize.h, 0, resize.h, resize.w);
                       break;
@@ -230,22 +241,13 @@
                 w: img.width,
                 h: img.height
               };
-            switch (orientation) {
-              case 6:
-                ret.w = img.height;
-                ret.h = img.width;
-                break;
 
-              case 8:
-                ret.w = img.height;
-                ret.h = img.width;
-                break;
+            if("5678".indexOf(orientation) > -1){
+              ret.w = img.height;
+              ret.h = img.width;
+            }
 
-              default:
-                
-              }
             var scale = ret.w / ret.h;
-              
 
             if (w && h) {
               if (scale >= w / h) {
