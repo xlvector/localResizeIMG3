@@ -12,7 +12,7 @@
     "body-parser": "^1.12.0",
     "express": "^4.11.2"
   },
-    "main": "dist/lrz.mobile.min.js",
+    "main": "dist/lrz.pc.min.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/xlvector/localResizeIMG3.git"
